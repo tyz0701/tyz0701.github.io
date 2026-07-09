@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>给你的一个小惊喜</title>
+    <style>
+      :root {
+        --ink: #2f2a27;
+        --paper: #fff8ec;
+        --peach: #ff8f7a;
+        --rose: #ff5f7e;
+        --mint: #85d8bd;
+        --sky: #7db7ff;
+        --butter: #ffe083;
+        --line: rgba(47, 42, 39, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Trebuchet MS", "Microsoft YaHei", sans-serif;
+        background:
+          radial-gradient(circle at 12% 14%, rgba(255, 224, 131, 0.9),
+          transparent 24rem),
+          radial-gradient(circle at 85% 8%, rgba(125, 183, 255, 0.55),
+          transparent 22rem),
+          linear-gradient(135deg, #fff8ec 0%, #ffe7dc 45%, #e9fff6 100%);
+        overflow-x: hidden;
+      }
+
+      main {
+        width: min(920px, calc(100% - 32px));
+        margin: 0 auto;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px 0;
+      }
+
+      .panel {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: clamp(24px, 5vw, 56px);
+        box-shadow: 0 24px 70px rgba(255, 95, 126, 0.18);
+        backdrop-filter: blur(18px);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1px solid var(--line);
+        font-size: 14px;
+        margin-bottom: 18px;
+      }
+
+      h1, h2 {
+        margin: 0;
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        font-family: Georgia, "Microsoft YaHei", serif;
+        font-size: clamp(42px, 9vw, 82px);
+      }
+
+      h2 {
+        font-family: Georgia, "Microsoft YaHei", serif;
+        font-size: clamp(32px, 6vw, 58px);
+      }
+
+      p {
+        font-size: clamp(17px, 2.4vw, 22px);
+        line-height: 1.8;
+        margin: 18px 0 0;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 14px 20px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #ffffff;
+        background: var(--rose);
+        cursor: pointer;
+        box-shadow: 0 12px 28px rgba(255, 95, 126, 0.28);
+      }
+
+      button.secondary {
+        background: var(--sky);
+        box-shadow: 0 12px 28px rgba(125, 183, 255, 0.25);
+      }
+
+      input {
+        width: 100%;
+        margin-top: 24px;
+        padding: 18px 20px;
+        border-radius: 18px;
+        border: 2px solid rgba(47, 42, 39, 0.15);
+        font-size: 18px;
+        outline: none;
+        background: #fffdf8;
+      }
+
+      input:focus {
+        border-color: var(--peach);
+        box-shadow: 0 0 0 5px rgba(255, 143, 122, 0.18);
+      }
+
+      .progress {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+
+      .dot {
+        height: 10px;
+        border-radius: 99px;
+        background: rgba(47, 42, 39, 0.12);
+      }
+
+      .dot.active {
+        background: linear-gradient(90deg, var(--peach), var(--rose));
+      }
+
+      .feedback {
+        min-height: 32px;
+        margin-top: 16px;
+        font-weight: 700;
+        color: #c94a61;
+      }
+
+      .final-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: stretch;
+        margin-top: 26px;
+      }
+
+      .photo-wrap, .letter, .coupon {
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.78);
+        overflow: hidden;
+      }
+
+      .photo-wrap {
+        min-height: 360px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #ffe7dc, #e9fff6);
+      }
+
+      .photo-wrap img {
+        width: 100%;
+        height: 100%;
+        min-height: 360px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .photo-fallback {
+        padding: 28px;
+        text-align: center;
+        font-size: 20px;
+        line-height: 1.6;
+      }
+
+      .letter, .coupon {
+        padding: 24px;
+      }
+
+      .letter h3, .coupon h3 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .letter p, .coupon p {
+        font-size: 17px;
+        line-height: 1.8;
+      }
+
+      .coupon {
+        margin-top: 24px;
+        border-style: dashed;
+        background: #fff7c8;
+      }
+
+      .floating {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .heart {
+        position: absolute;
+        font-size: 22px;
+        animation: floatUp 7s linear infinite;
+        opacity: 0.55;
+      }
+
+      @keyframes floatUp {
+        from {
+          transform: translateY(110vh) rotate(0deg);
+        }
+        to {
+          transform: translateY(-20vh) rotate(30deg);
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 760px) {
+        .final-grid {
+          grid-template-columns: 1fr;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+</head>
+<body>
+    <div class="floating" id="hearts"></div>
+
+    <main>
+      <section class="panel" id="startScreen">
+        <div class="tag">给你准备了一个小小闯关礼物</div>
+        <h1>打开这个礼物盒</h1>
+        <p>里面有五个小问题。答对当然最好，答不对也没关系，因为今天的规则
+        是：你永远可以过关。</p>
+        <div class="button-row">
+          <button onclick="startGame()">开始解锁</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="quizScreen">
+        <div class="progress" id="progress"></div>
+        <div class="tag" id="levelTag">第 1 关</div>
+        <h2 id="questionTitle">问题</h2>
+        <p id="questionText"></p>
+        <input id="answerInput" autocomplete="off" placeholder="在这里写下你
+        的答案" />
+        <div class="feedback" id="feedback"></div>
+        <div class="button-row">
+          <button onclick="checkAnswer()">提交答案</button>
+          <button class="secondary hidden" id="nextButton"
+          onclick="nextQuestion()">继续下一关</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="finalScreen">
+        <div class="tag">解锁成功</div>
+        <h2>这是最后的惊喜</h2>
+        <p>前面的答案都不重要，重要的是你愿意一点点打开它。</p>
+
+        <div class="final-grid">
+          <div class="photo-wrap">
+            <img src="final.jpg" alt="我们的照片"
+            onerror="showPhotoFallback(this)" />
+          </div>
+
+          <div>
+            <div class="letter">
+              <h3>写给你</h3>
+              <p>
+                遇见你之后，很多普通的日子都变得有了特别的意义。
+                我做这个小网页，不是因为它有多厉害，而是想把“我很认真地在乎
+                你”
+                这件事，换一种可爱的方式告诉你。
+              </p>
+              <p>
+                希望你打开它的时候，会笑一下。也希望以后的很多天里，
+                我都能继续陪你一起收集开心、拥抱和小小的幸运。
+              </p>
+            </div>
+
+            <div class="coupon">
+              <h3>专属奖励券</h3>
+              <p>
+                凭本券可兑换：一次你想去的约会，一顿你想吃的大餐，
+                或一次不讲道理的抱抱。长期有效，不许过期。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const questions = [
+        {
+          title: "第一关",
+          text: "今天这个小网页，是谁偷偷给你准备的？",
+          answers: ["我", "男朋友", "tyz", "喜欢你的人"],
+          success: "被你发现啦。"
+        },
+        {
+          title: "第二关",
+          text: "如果把坏心情装进盒子里，你希望我往里面再放点什么？",
+          answers: ["开心", "抱抱", "糖", "陪伴"],
+          success: "收到，马上给你安排。"
+        },
+        {
+          title: "第三关",
+          text: "你猜我现在最想对你说的三个字是什么？",
+          answers: ["喜欢你", "爱你", "想你"],
+          success: "答得很危险，因为太接近标准答案了。"
+        },
+        {
+          title: "第四关",
+          text: "如果今天可以许一个小愿望，你希望是什么？",
+          answers: ["见面", "开心", "吃饭", "约会"],
+          success: "这个愿望，我先记下来。"
+        },
+        {
+          title: "第五关",
+          text: "最后一关：你愿意打开最终惊喜吗？",
+          answers: ["愿意", "好", "打开", "想"],
+          success: "礼物盒正在打开。"
+        }
+      ];
+
+      let current = 0;
+      let checked = false;
+
+      function startGame() {
+        document.getElementById("startScreen").classList.add("hidden");
+        document.getElementById("quizScreen").classList.remove("hidden");
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        checked = false;
+        const q = questions[current];
+
+        document.getElementById("levelTag").textContent = q.title;
+        document.getElementById("questionTitle").textContent = `第 ${current
+        + 1} 关`;
+        document.getElementById("questionText").textContent = q.text;
+        document.getElementById("answerInput").value = "";
+        document.getElementById("feedback").textContent = "";
+        document.getElementById("nextButton").classList.add("hidden");
+
+        const progress = document.getElementById("progress");
+        progress.innerHTML = "";
+        questions.forEach((_, index) => {
+          const dot = document.createElement("div");
+          dot.className = "dot" + (index <= current ? " active" : "");
+          progress.appendChild(dot);
+        });
+
+        setTimeout(() => document.getElementById("answerInput").focus(),
+        80);
+      }
+
+      function normalize(value) {
+        return value.trim().toLowerCase().replace(/\s+/g, "");
+      }
+
+      function checkAnswer() {
+        const input = document.getElementById("answerInput");
+        const feedback = document.getElementById("feedback");
+        const value = normalize(input.value);
+        const q = questions[current];
+
+        if (!value) {
+          feedback.textContent = "先写一点点嘛。";
+          return;
+        }
+
+        const matched = q.answers.some(answer =>
+        value.includes(normalize(answer)));
+
+        if (matched) {
+          feedback.textContent = q.success;
+        } else {
+          feedback.textContent = "这个答案我也喜欢，所以这关算你过。";
+        }
+
+        checked = true;
+        document.getElementById("nextButton").classList.remove("hidden");
+      }
+
+      function nextQuestion() {
+        if (!checked) {
+          checkAnswer();
+          return;
+        }
+
+        current += 1;
+
+        if (current >= questions.length) {
+          document.getElementById("quizScreen").classList.add("hidden");
+          document.getElementById("finalScreen").classList.remove("hidden");
+          return;
+        }
+
+        renderQuestion();
+      }
+
+      function showPhotoFallback(img) {
+        const parent = img.parentElement;
+        parent.innerHTML = '<div class="photo-fallback">把你们的照片命名为<strong>final.jpg</strong><br>放在这个网页同一个文件夹里，最终惊喜就会出现。</div>';
+      }
+
+      function makeHearts() {
+        const holder = document.getElementById("hearts");
+        const items = ["♡", "❤", "✦", "★"];
+        for (let i = 0; i < 24; i += 1) {
+          const heart = document.createElement("div");
+          heart.className = "heart";
+          heart.textContent = items[i % items.length];
+          heart.style.left = `${Math.random() * 100}%`;
+          heart.style.animationDelay = `${Math.random() * 7}s`;
+          heart.style.animationDuration = `${6 + Math.random() * 5}s`;
+          heart.style.color = ["#ff5f7e", "#ff8f7a", "#7db7ff", "#85d8bd"][i
+          % 4];
+          holder.appendChild(heart);
+        }
+      }
+
+      makeHearts();
+    </script>
+</body>
+</html>
